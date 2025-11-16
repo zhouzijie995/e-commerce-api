@@ -16,6 +16,7 @@ import { PermissionsService } from './permissions/permissions.service';
 import { Permission } from './permissions/permissions.model';
 import { Role } from './roles/roles.model';
 import { RolePermission } from './roles/role-permission.model';
+import { UserRoles } from './roles/user-roles.model';
 
 @Module({
   imports: [
@@ -26,7 +27,7 @@ import { RolePermission } from './roles/role-permission.model';
       username: 'nest_user',
       password: '123456',
       database: 'nest_demo',
-      models: [User, Post, Group, Permission, Role, RolePermission],
+      models: [User, Post, Group, Permission, Role, RolePermission, UserRoles],
       autoLoadModels: true,
       synchronize: true,
       logging: console.log,

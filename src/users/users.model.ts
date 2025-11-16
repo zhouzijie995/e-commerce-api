@@ -10,9 +10,12 @@ import {
   HasMany,
   ForeignKey,
   BelongsTo,
+  BelongsToMany,
 } from 'sequelize-typescript';
 import { Post } from '../posts/post.model';
 import { Group } from 'src/group/group.model';
+import { Role } from 'src/roles/roles.model';
+import { UserRoles } from 'src/roles/user-roles.model';
 @Table({ tableName: 'users', freezeTableName: true })
 export class User extends Model<User> {
   @PrimaryKey
@@ -47,6 +50,9 @@ export class User extends Model<User> {
   declare updatedAt: Date;
   @HasMany(() => Post)
   posts!: Post[];
+
+  @BelongsToMany(() => Role, () => UserRoles)
+  roles: Role[];
 
   toJSON() {
     const values = { ...this.get() };

@@ -14,7 +14,7 @@ import { JwtAuthGuard } from './auth-guard';
     PassportModule,
     JwtModule.register({
       secret: 'MY_SECRET_KEY', // JWT 加密秘钥（开发阶段写死，生产放 .env）
-      signOptions: { expiresIn: '24h' }, // Token 有效期 1 小时
+      signOptions: { expiresIn: '24h' },
     }),
     SequelizeModule.forFeature([User]),
   ],
