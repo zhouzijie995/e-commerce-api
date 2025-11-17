@@ -7,12 +7,10 @@ import {
   Param,
   Put,
   Query,
-  Inject,
 } from '@nestjs/common';
 import { GroupService } from './group.service';
 import { CreateGroupDto } from './dto/create-group.dto';
 import { UpdateGroupDto } from './dto/update-group.dto';
-import { log } from 'console';
 
 @Controller('group')
 export class GroupController {

@@ -17,6 +17,7 @@ import { Permission } from './permissions/permissions.model';
 import { Role } from './roles/roles.model';
 import { RolePermission } from './roles/role-permission.model';
 import { UserRoles } from './roles/user-roles.model';
+import { RolesModule } from './roles/roles.module';
 
 @Module({
   imports: [
@@ -41,6 +42,7 @@ import { UserRoles } from './roles/user-roles.model';
     UsersModule,
     AuthModule,
     PostsModule,
+    RolesModule,
   ],
   providers: [PermissionsService],
   controllers: [UploadController],

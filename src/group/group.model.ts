@@ -12,7 +12,7 @@ import {
   ForeignKey,
   HasMany,
 } from 'sequelize-typescript';
-import { Col } from 'sequelize/lib/utils';
+
 import { User } from 'src/users/users.model';
 
 @Table({ tableName: 'groups' })
