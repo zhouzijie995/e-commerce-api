@@ -1,4 +1,13 @@
-import { Body, Controller, Get, Param, Post, Put, Query } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  ParseIntPipe,
+  Post,
+  Put,
+  Query,
+} from '@nestjs/common';
 import { RolesService } from './roles.service';
 
 @Controller('roles')
@@ -25,5 +34,13 @@ export class RolesController {
 
     const { id, ...data } = body;
     return this.rolesService.update(id, data);
+  }
+  @Post(':id/permissions')
+  async addPermissions(
+    @Param('id', ParseIntPipe) roleId: number,
+    @Body('permissionIds') permissionIds: number[],
+  ) {
+    await this.rolesService.assignPermissionsToRole(roleId, permissionIds);
+    return { message: '权限绑定成功' };
   }
 }

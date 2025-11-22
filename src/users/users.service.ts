@@ -5,6 +5,8 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { Group } from 'src/group/group.model';
 import { Op } from 'sequelize';
+import { Role } from 'src/roles/roles.model';
+import { Permission } from 'src/permissions/permissions.model';
 @Injectable()
 export class UsersService {
   constructor(
@@ -66,5 +68,43 @@ export class UsersService {
   async deleteUser(id: number): Promise<void> {
     const user = await this.findUser(id);
     await user.destroy();
+  }
+  async findUserWithRolesAndPermissions(id: number): Promise<User | null> {
+    return await this.userModel.findByPk(id, {
+      include: [
+        {
+          model: Role,
+          include: [Permission],
+        },
+      ],
+    });
+  }
+  async findUserWithRoles(id: number): Promise<User> {
+    const user = await this.userModel.findByPk(id, {
+      include: [
+        {
+          model: Role,
+          as: 'roles',
+          through: { attributes: [] },
+          attributes: {
+            exclude: ['UserRoles'],
+          },
+        },
+      ],
+    });
+    if (!user) throw new NotFoundException('用户不存在');
+    return user;
+  }
+
+  async updateUserRoles(userId: number, roleIds: number[]): Promise<void> {
+    const user = await this.findUserWithRoles(userId);
+    console.log(roleIds, 'roleIds');
+
+    const roles = await Role.findAll({
+      where: { id: { [Op.in]: roleIds } },
+    });
+
+    await user.$set('roles', []);
+    await user.$add('roles', roles);
   }
 }

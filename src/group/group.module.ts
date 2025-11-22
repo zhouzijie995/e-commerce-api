@@ -4,8 +4,10 @@ import { Group } from './group.model';
 import { GroupService } from './group.service';
 import { GroupController } from './group.controller';
 import { User } from 'src/users/users.model';
+import { AuthModule } from 'src/auth/auth.module';
+import { UsersModule } from 'src/users/users.module';
 @Module({
-  imports: [SequelizeModule.forFeature([Group, User])],
+  imports: [UsersModule, AuthModule, SequelizeModule.forFeature([Group, User])],
   controllers: [GroupController],
   providers: [GroupService],
 })

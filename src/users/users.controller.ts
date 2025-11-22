@@ -8,12 +8,14 @@ import {
   Post,
   Put,
   Query,
+  Req,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { UpdateUserRolesDto } from './dto/update-user-roles.dto';
 
 @Controller('users')
 export class UsersController {
@@ -40,7 +42,10 @@ export class UsersController {
   async findOne(@Param('id', ParseIntPipe) id: number) {
     return this.usersService.findUser(id);
   }
-
+  @Get('userInfo/:id')
+  async userInfo(@Param('id', ParseIntPipe) id: number) {
+    return this.usersService.findUserWithRoles(id);
+  }
   @Put(':id')
   @UsePipes(new ValidationPipe({ whitelist: true, transform: true }))
   async update(
@@ -54,5 +59,14 @@ export class UsersController {
   async remove(@Param('id', ParseIntPipe) id: number) {
     await this.usersService.deleteUser(id);
     return { message: '删除成功' };
+  }
+
+  @Put(':id/roles')
+  async updateUserRoles(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() body: UpdateUserRolesDto,
+  ) {
+    await this.usersService.updateUserRoles(id, body?.roleIds ?? []);
+    return { message: '用户角色更新成功' };
   }
 }
