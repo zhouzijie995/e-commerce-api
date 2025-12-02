@@ -30,7 +30,7 @@ export class RolesController {
 
   @Put()
   async updateRole(@Body() body) {
-    console.log(body, 'body');
+
 
     const { id, ...data } = body;
     return this.rolesService.update(id, data);

@@ -86,9 +86,15 @@ export class UsersService {
           model: Role,
           as: 'roles',
           through: { attributes: [] },
-          attributes: {
-            exclude: ['UserRoles'],
-          },
+          attributes: { exclude: ['createdAt', 'updatedAt'] },
+          include: [
+            {
+              model: Permission,
+              as: 'permissions',
+              through: { attributes: [] },
+              attributes: { exclude: ['createdAt', 'updatedAt'] },
+            },
+          ],
         },
       ],
     });

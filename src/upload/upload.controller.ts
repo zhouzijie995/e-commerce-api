@@ -11,7 +11,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 
 import { FileUtil } from './utils';
-import { log } from 'console';
+
 @Controller('upload')
 export class UploadController {
   @Public()
