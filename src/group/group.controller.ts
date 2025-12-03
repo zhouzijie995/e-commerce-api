@@ -31,6 +31,7 @@ export class GroupController {
   async updateGroup(@Body() body: UpdateGroupDto) {
     return await this.groupService.updateGroup(body);
   }
+  @RequirePermission('group.read')
   @Get()
   async getGroups(
     @Query('page') page,

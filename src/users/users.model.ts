@@ -55,8 +55,8 @@ export class User extends Model<User> {
   roles: Role[];
 
   toJSON() {
-    const values = { ...this.get() };
-    Reflect.deleteProperty(values, 'password');
-    return values;
+    const values = super.toJSON();
+    const { password, ...rest } = values;
+    return rest;
   }
 }

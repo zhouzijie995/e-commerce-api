@@ -24,13 +24,13 @@ export class Role extends Model<Role> {
     allowNull: false,
     unique: true,
   })
-  name: string;
+  declare name: string;
 
   @Column({
     type: DataType.STRING,
     allowNull: true,
   })
-  description?: string;
+  declare description?: string;
 
   @BelongsToMany(() => Permission, () => RolePermission)
   permissions: Permission[];

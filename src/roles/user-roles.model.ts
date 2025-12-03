@@ -12,9 +12,9 @@ import { Role } from './roles.model';
 export class UserRoles extends Model<UserRoles> {
   @ForeignKey(() => User)
   @Column({ type: DataType.INTEGER, allowNull: false })
-  userId: number;
+  declare userId: number;
 
   @ForeignKey(() => Role)
   @Column({ type: DataType.INTEGER, allowNull: false })
-  roleId: number;
+  declare roleId: number;
 }

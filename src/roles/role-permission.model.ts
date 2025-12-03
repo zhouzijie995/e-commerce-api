@@ -16,12 +16,12 @@ export class RolePermission extends Model<RolePermission> {
     type: DataType.INTEGER,
     allowNull: false,
   })
-  roleId: number;
+  declare roleId: number;
 
   @ForeignKey(() => Permission)
   @Column({
     type: DataType.INTEGER,
     allowNull: false,
   })
-  permissionId: number;
+  declare permissionId: number;
 }

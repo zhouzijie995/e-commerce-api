@@ -27,7 +27,12 @@ export class GroupService {
       where['name'] = { [Op.like]: `%${name}%` };
     }
     return this.groupModel.findAndCountAll({
-      include: ['user'],
+      include: [
+        {
+          association: 'user',
+          attributes: { exclude: ['password'] },
+        },
+      ],
       limit: size,
       offset,
       where,
