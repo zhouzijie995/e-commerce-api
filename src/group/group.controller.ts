@@ -14,12 +14,13 @@ import { CreateGroupDto } from './dto/create-group.dto';
 import { UpdateGroupDto } from './dto/update-group.dto';
 import { RequirePermission } from 'src/permissions/require-permission-decorator';
 import { PermissionGuard } from 'src/permissions/permission.guard';
+import { PERMISSIONS } from 'src/permissions/permissions.constants';
 @UseGuards(PermissionGuard)
 @Controller('group')
 export class GroupController {
   constructor(private readonly groupService: GroupService) {}
 
-  @RequirePermission('group.write')
+  @RequirePermission(PERMISSIONS['GROUP_WRITE'])
   @Post()
   async createGroup(@Body() body: CreateGroupDto, @Request() req) {
     return await this.groupService.createGroup({
@@ -31,7 +32,7 @@ export class GroupController {
   async updateGroup(@Body() body: UpdateGroupDto) {
     return await this.groupService.updateGroup(body);
   }
-  @RequirePermission('group.read')
+  @RequirePermission(PERMISSIONS['GROUP_READ'])
   @Get()
   async getGroups(
     @Query('page') page,

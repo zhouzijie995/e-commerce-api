@@ -1,31 +1,33 @@
 #!/bin/bash
+# import.sh
 
 CONTAINER_NAME="nest-postgres"
-DB_NAME="nest_demo"
+HOST_DIR="/Users/zhouzijie/sql/postgres-data"
 DB_USER="nest_user"
+DB_PASS="123456"
+DB_NAME="nest_demo"
 DUMP_FILE="dump.sql"
 
-echo "🔍 查找 PostgreSQL 容器: $CONTAINER_NAME ..."
-CONTAINER_ID=$(docker ps --filter "name=$CONTAINER_NAME" --format "{{.ID}}")
+# 停止并删除旧容器（如果存在）
+docker rm -f $CONTAINER_NAME 2>/dev/null
 
-if [ -z "$CONTAINER_ID" ]; then
-  echo "❌ 未找到容器 $CONTAINER_NAME"
-  exit 1
-fi
+# 清空 host 数据目录
+rm -rf $HOST_DIR
+mkdir -p $HOST_DIR
 
-if [ ! -f "$DUMP_FILE" ]; then
-  echo "❌ 未找到 $DUMP_FILE，请确认和脚本在同一目录"
-  exit 1
-fi
+# 启动新容器，正确挂载 /var/lib/postgresql
+docker run -d \
+  --name $CONTAINER_NAME \
+  -e POSTGRES_USER=$DB_USER \
+  -e POSTGRES_PASSWORD=$DB_PASS \
+  -e POSTGRES_DB=$DB_NAME \
+  -v $HOST_DIR:/var/lib/postgresql/18/docker  \
+  -p 5432:5432 \
+  postgres:18
 
-echo "📤 复制 dump.sql 到容器..."
-docker cp $DUMP_FILE $CONTAINER_ID:/dump.sql
+# 等待容器启动
+sleep 5
 
-echo "📥 开始导入数据库 $DB_NAME ..."
-docker exec -t $CONTAINER_ID bash -c "psql -U $DB_USER -d $DB_NAME -f /dump.sql"
-
-if [ $? -eq 0 ]; then
-  echo "✅ 数据库导入成功！"
-else
-  echo "❌ 导入失败"
-fi
+# 复制 dump.sql 并导入
+docker cp $DUMP_FILE $CONTAINER_NAME:/dump.sql
+docker exec -t $CONTAINER_NAME bash -c "psql -U $DB_USER -d $DB_NAME -f /dump.sql"
