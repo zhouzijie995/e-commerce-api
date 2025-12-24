@@ -52,12 +52,13 @@ export class PermissionGuard implements CanActivate {
     const payload = this.jwtService.verify(token);
     const userId = payload.sub;
 
-    const res = await this.usersService.findUserWithRolesAndPermissions(userId);
+    const user =
+      await this.usersService.findUserWithRolesAndPermissions(userId);
 
-    if (!res) {
+    if (!user) {
       throw new UnauthorizedException('用户不存在');
     }
-    const user = res.toJSON();
+
     const userPermissions = (user.roles || [])
       .flatMap((role) => role?.permissions)
       .map((p) => p?.key)

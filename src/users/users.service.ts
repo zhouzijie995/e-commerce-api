@@ -7,11 +7,13 @@ import { Group } from 'src/group/group.model';
 import { Op } from 'sequelize';
 import { Role } from 'src/roles/roles.model';
 import { Permission } from 'src/permissions/permissions.model';
+import { RedisService } from 'src/cache/redis.service';
 @Injectable()
 export class UsersService {
   constructor(
     @InjectModel(User)
     private userModel: typeof User,
+    private redisService: RedisService,
   ) {}
 
   async createUser(dto: CreateUserDto): Promise<User> {
@@ -70,7 +72,13 @@ export class UsersService {
     await user.destroy();
   }
   async findUserWithRolesAndPermissions(id: number): Promise<User | null> {
-    return await this.userModel.findByPk(id, {
+    const cacheKey = `user:${id}`;
+    let user = await this.redisService.get(cacheKey);
+    if (user) {
+      console.log('缓存' + cacheKey);
+      return user;
+    }
+    const res = await this.userModel.findByPk(id, {
       include: [
         {
           model: Role,
@@ -78,6 +86,13 @@ export class UsersService {
         },
       ],
     });
+    if (!res || !res?.toJSON) {
+      return null;
+    }
+
+    user = res.toJSON();
+    await this.redisService.set(cacheKey, user, 10 * 60);
+    return user;
   }
   async findUserWithRoles(id: number): Promise<User> {
     const user = await this.userModel.findByPk(id, {
