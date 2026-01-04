@@ -75,7 +75,6 @@ export class UsersService {
     const cacheKey = `user:${id}`;
     let user = await this.redisService.get(cacheKey);
     if (user) {
-      console.log('缓存' + cacheKey);
       return user;
     }
     const res = await this.userModel.findByPk(id, {
@@ -127,5 +126,6 @@ export class UsersService {
 
     await user.$set('roles', []);
     await user.$add('roles', roles);
+    await this.redisService.del(`user:${userId}`);
   }
 }
