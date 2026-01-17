@@ -2,7 +2,8 @@
 # import.sh
 
 CONTAINER_NAME="nest-postgres"
-HOST_DIR="/Users/zhouzijie/sql/postgres-data"
+#HOST_DIR="/Users/zhouzijie/sql/postgres-data"
+HOST_DIR="/Users/dnj/store/postgres-data"
 DB_USER="nest_user"
 DB_PASS="123456"
 DB_NAME="nest_demo"
